@@ -2,6 +2,7 @@
 
 A Streamlit web application to bulk-fetch and export Osmania University exam results by hall ticket number range.
 
+#### Live URL -> https://ressniper.streamlit.app/
 ---
 
 ## 📸 Features
