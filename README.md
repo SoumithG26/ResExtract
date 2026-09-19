@@ -19,9 +19,10 @@ A Streamlit web application to bulk-fetch and export Osmania University exam res
 
 | Exam Cycle | URL |
 |---|---|
-| Feb / March 2025 | https://www.osmania.ac.in/res07/20250403.jsp |
-| July / August 2025 | https://www.osmania.ac.in/res07/2025becbcs.jsp |
+| July/August 2026 | https://www.osmania.ac.in/res07/20260655.jsp |
 | Dec 2025 / Jan 2026 | https://www.osmania.ac.in/res07/20251290.jsp |
+| July / August 2025 | https://www.osmania.ac.in/res07/2025becbcs.jsp |
+| Feb / March 2025 | https://www.osmania.ac.in/res07/20250403.jsp |
 
 > The URL format changes each semester. Check the OU results portal for the latest link and paste it into the app.
 
