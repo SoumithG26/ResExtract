@@ -276,8 +276,8 @@ def parse_result(htno: str, html: str, selected_attrs: list):
         for row in t.find_all("tr"):
             cells = [c.get_text(strip=True) for c in row.find_all("td")]
             if len(cells) >= 3 and cells[0].isdigit():
-                record["Semester"]      = cells[0]
                 record["Result (SGPA)"] = cells[1]
+                record["Semester"]      = cells[0]
                 record["Overall CGPA"]  = cells[2]
 
     if not record.get("Name", "").strip():
@@ -380,7 +380,7 @@ st.markdown("""
 
 with st.sidebar:
     st.markdown("### ⚙️ Configuration")
-    url = st.text_input("Results URL", value="https://www.osmania.ac.in/res07/20251290.jsp")
+    url = st.text_input("Results URL", value="https://www.osmania.ac.in/res07/20260655.jsp")
 
     st.markdown("---")
     st.markdown("#### 📋 Attributes to Extract")
@@ -406,7 +406,7 @@ with st.sidebar:
     st.markdown("#### 💾 Cache Settings")
     use_cache = st.toggle("Use cached results", value=True,
                           help="Skip network requests for HTNOs already saved locally.")
-    delay = st.slider("Delay between requests (s)", 0.0, 3.0, 0.5, 0.1)
+    delay = st.slider("Delay between requests (s)", 0.0, 3.0, 0.10, 0.1)
     run_btn = st.button("🚀 Fetch Results", use_container_width=True)
 
 
@@ -556,8 +556,28 @@ if st.session_state.df_results is not None:
     st.markdown("<br>", unsafe_allow_html=True)
 
     all_cols  = list(df.columns)
+    
+    if "Result (SGPA)" in all_cols:
+        all_cols.remove("Result (SGPA)")
+        fn_col = next((c for c in all_cols if "father" in c.lower()), None)
+        if fn_col:
+            all_cols.insert(all_cols.index(fn_col), "Result (SGPA)")
+        elif "Name" in all_cols:
+            all_cols.insert(all_cols.index("Name") + 1, "Result (SGPA)")
+        else:
+            all_cols.insert(1, "Result (SGPA)")
+        df = df[all_cols]
+        
+    exclude_exact = {"Course", "Semester", "Sub Code", "Credits", "Subject", "Grade", "Medium"}
+    def is_default(c):
+        if "|" in c or c in exclude_exact: return False
+        if c.isdigit(): return False
+        if len(c) <= 5 and any(ch.isdigit() for ch in c): return False
+        return True
+
+    default_cols = [c for c in all_cols if is_default(c)]
     show_cols = st.multiselect("Columns to display", all_cols,
-                               default=all_cols[:min(15, len(all_cols))])
+                               default=default_cols)
     if show_cols:
         st.dataframe(df[show_cols], use_container_width=True, height=500)
 
